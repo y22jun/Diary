@@ -39,3 +39,4 @@ out/
 src/main/resources/application-db.yml
 src/main/resources/application-jwt.yml
 src/main/resources/application-test.yml
+src/main/resources/application-cookie.yml
