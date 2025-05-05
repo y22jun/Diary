@@ -24,7 +24,8 @@ public class SecurityConfig {
     private final JwtTokenFilter jwtTokenFilter;
 
     private static final String[] PERMIT_ALL_PATTERNS = {
-            "/login"
+            "/login",
+            "/members/sign-up"
     };
 
     @Bean

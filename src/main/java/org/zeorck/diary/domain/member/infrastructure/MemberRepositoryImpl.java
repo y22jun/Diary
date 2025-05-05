@@ -25,4 +25,9 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .orElseThrow(MemberNotFoundException::new);
     }
 
+    public Member findById(Long memberId) {
+        return memberJpaRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+    }
+
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.zeorck.diary.global.auth.application.RefreshTokenService;
 import org.zeorck.diary.global.auth.presentation.exception.AuthenticationRequiredException;
 import org.zeorck.diary.global.auth.presentation.exception.RefreshTokenNotValidException;
@@ -27,21 +28,27 @@ import static org.zeorck.diary.global.jwt.resolver.JwtTokenResolver.REFRESH_TOKE
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class JwtTokenFilter {
+public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenResolver tokenResolver;
     private final TokenInjector tokenInjector;
     private final UserDetailsService userDetailsService;
     private final RefreshTokenService refreshTokenService;
 
+    @Override
     protected void doFilterInternal(
-            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
     ) throws ServletException, IOException {
         processTokenAuthentication(request, response);
         filterChain.doFilter(request, response);
     }
 
-    private void processTokenAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    private void processTokenAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
         try {
             String token = resolveTokenFromRequest(request, response);
             setAuthentication(request, getUserDetails(token, request, response));
@@ -58,7 +65,10 @@ public class JwtTokenFilter {
         }
     }
 
-    private String resolveTokenFromRequest(HttpServletRequest request, HttpServletResponse response) {
+    private String resolveTokenFromRequest(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
         try {
             return tokenResolver.resolveTokenFromRequest(request)
                     .orElseGet(() -> refreshTokenService.reissueBasedOnRefreshToken(request, response).accessToken());
@@ -67,7 +77,11 @@ public class JwtTokenFilter {
         }
     }
 
-    private UserDetails getUserDetails(String token, HttpServletRequest request, HttpServletResponse response) {
+    private UserDetails getUserDetails(
+            String token,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
         try {
             String subject = tokenResolver.getSubjectFromToken(token);
             return userDetailsService.loadUserByUsername(subject);
@@ -78,14 +92,20 @@ public class JwtTokenFilter {
         }
     }
 
-    private void setAuthentication(HttpServletRequest request, UserDetails userDetails) {
+    private void setAuthentication(
+            HttpServletRequest request,
+            UserDetails userDetails
+    ) {
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private void invalidateCookie(String cookieName, HttpServletResponse response) {
+    private void invalidateCookie(
+            String cookieName,
+            HttpServletResponse response
+    ) {
         tokenInjector.invalidateCookie(cookieName, response);
         SecurityContextHolder.clearContext();
     }

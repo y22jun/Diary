@@ -19,7 +19,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping
+    @PostMapping("/sign-up")
     public ResponseEntity<MemberSaveResponse> saveMember(
             @Valid @RequestBody MemberSaveRequest request
     ) {
