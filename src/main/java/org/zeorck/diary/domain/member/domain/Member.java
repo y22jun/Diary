@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.zeorck.diary.domain.member.presentation.exception.EmailOrPasswordNotInvalidException;
 import org.zeorck.diary.global.domain.BaseTimeEntity;
 
 @Getter
@@ -26,6 +28,12 @@ public class Member extends BaseTimeEntity {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public void checkPassword(PasswordEncoder passwordEncoder, String password) {
+        if (!passwordEncoder.matches(password, this.password)) {
+            throw new EmailOrPasswordNotInvalidException();
+        }
     }
 
 }
