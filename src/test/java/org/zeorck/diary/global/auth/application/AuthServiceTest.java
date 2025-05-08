@@ -99,4 +99,14 @@ class AuthServiceTest {
         );
     }
 
+    @DisplayName("logout 호출 시 해당 memberId의 refreshToken이 삭제된다")
+    @Test
+    void logoutSuccess() {
+        Long memberId = 1L;
+
+        authService.logout(memberId);
+
+        verify(refreshTokenRepository, times(1)).deleteByMemberId(memberId);
+    }
+
 }

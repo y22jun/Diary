@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.zeorck.diary.global.annotation.MemberId;
 import org.zeorck.diary.global.auth.application.AuthService;
 import org.zeorck.diary.global.auth.dto.request.LoginRequest;
 import org.zeorck.diary.global.auth.dto.response.LoginResultResponse;
@@ -30,5 +31,13 @@ public class AuthController {
         );
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/members/logout")
+    public ResponseEntity<Void> logout(
+            @MemberId Long memberId
+    ) {
+        authService.logout(memberId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -32,4 +32,5 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     public void deleteByMemberId(Long memberId) {
         refreshTokenJpaRepository.deleteByMemberId(memberId);
     }
+
 }
