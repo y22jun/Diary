@@ -2,6 +2,7 @@ package org.zeorck.diary.global.auth.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.zeorck.diary.global.auth.presentation.exception.RefreshTokenNotValidException;
