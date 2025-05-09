@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zeorck.diary.domain.diary.domain.Diary;
 import org.zeorck.diary.domain.diary.dto.request.DiarySaveRequest;
+import org.zeorck.diary.domain.diary.dto.request.DiaryUpdateRequest;
 import org.zeorck.diary.domain.diary.infrastructure.DiaryJpaRepository;
 import org.zeorck.diary.domain.member.domain.Member;
 import org.zeorck.diary.domain.member.infrastructure.MemberJpaRepository;
@@ -50,6 +51,31 @@ class DiaryServiceTest {
         assertThat(diaryList.get(0).getTitle()).isEqualTo("test");
         assertThat(diaryList.get(0).getContent()).isEqualTo("test");
         assertThat(diaryList.get(0).getMember().getId()).isEqualTo(member.getId());
+    }
+
+    @DisplayName("특정 일기를 수정한다.")
+    @Test
+    void updateDiary() {
+        Member member = getNewMember();
+        memberJpaRepository.save(member);
+
+        DiarySaveRequest request = DiarySaveRequest.builder()
+                .title("test")
+                .content("test")
+                .build();
+
+        diaryService.saveDiary(member.getId(), request);
+        Diary savedDiary = diaryJpaRepository.findAll().get(0);
+
+        DiaryUpdateRequest diaryUpdateRequest = DiaryUpdateRequest.builder()
+                .title("test")
+                .content("test")
+                .build();
+        diaryService.updateDiary(member.getId(), savedDiary.getId(), diaryUpdateRequest);
+
+        Diary updatedDiary = diaryJpaRepository.findById(savedDiary.getId()).orElseThrow();
+        assertThat(updatedDiary.getTitle()).isEqualTo("test");
+        assertThat(updatedDiary.getContent()).isEqualTo("test");
     }
 
     Member getNewMember() {
