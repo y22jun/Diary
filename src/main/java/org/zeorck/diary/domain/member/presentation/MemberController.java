@@ -4,13 +4,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.zeorck.diary.domain.member.application.MemberService;
 import org.zeorck.diary.domain.member.dto.request.MemberSaveRequest;
+import org.zeorck.diary.domain.member.dto.response.MemberInfoResponse;
 import org.zeorck.diary.domain.member.dto.response.MemberSaveResponse;
+import org.zeorck.diary.global.annotation.MemberId;
 
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -25,6 +24,14 @@ public class MemberController {
     ) {
         MemberSaveResponse response = memberService.signUp(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<MemberInfoResponse> getMyMemberInfo(
+            @MemberId Long memberId
+    ) {
+        MemberInfoResponse response = memberService.getMyMemberInfo(memberId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

@@ -3,9 +3,11 @@ package org.zeorck.diary.domain.member.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zeorck.diary.domain.member.domain.Member;
 import org.zeorck.diary.domain.member.domain.MemberRepository;
 import org.zeorck.diary.domain.member.dto.request.MemberSaveRequest;
+import org.zeorck.diary.domain.member.dto.response.MemberInfoResponse;
 import org.zeorck.diary.domain.member.dto.response.MemberSaveResponse;
 import org.zeorck.diary.domain.member.presentation.exception.EmailAlreadyExistsException;
 
@@ -27,6 +29,16 @@ public class MemberService {
 
         return MemberSaveResponse.builder()
                 .memberId(member.getId())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResponse getMyMemberInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId);
+
+        return MemberInfoResponse.builder()
+                .email(member.getEmail())
+                .createdAt(member.getCreatedAt())
                 .build();
     }
 

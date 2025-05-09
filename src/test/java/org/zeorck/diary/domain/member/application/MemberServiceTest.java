@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import org.zeorck.diary.domain.member.domain.Member;
 import org.zeorck.diary.domain.member.dto.request.MemberSaveRequest;
+import org.zeorck.diary.domain.member.dto.response.MemberInfoResponse;
 import org.zeorck.diary.domain.member.dto.response.MemberSaveResponse;
 import org.zeorck.diary.domain.member.infrastructure.MemberJpaRepository;
 import org.zeorck.diary.domain.member.presentation.exception.EmailAlreadyExistsException;
@@ -62,6 +63,22 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.signUp(request))
                 .isInstanceOf(EmailAlreadyExistsException.class)
                 .hasMessage("이메일이 이미 존재합니다.");
+    }
+
+    @DisplayName("이메일, 가입일자를 보여준다.")
+    @Test
+    void getMemberInfo() {
+        Member member = Member.builder()
+                .email("test@naver.com")
+                .password("test")
+                .build();
+        memberJpaRepository.save(member);
+
+        MemberInfoResponse response = memberService.getMyMemberInfo(member.getId());
+
+        assertThat(response).isNotNull();
+        assertThat(response.email()).isEqualTo("test@naver.com");
+        assertThat(response.createdAt()).isNotNull();
     }
 
 }
