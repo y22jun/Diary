@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zeorck.diary.domain.diary.domain.Diary;
+import org.zeorck.diary.domain.diary.domain.Visibility;
 import org.zeorck.diary.domain.diary.dto.request.DiarySaveRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryUpdateRequest;
 import org.zeorck.diary.domain.diary.infrastructure.DiaryJpaRepository;
@@ -43,6 +44,7 @@ class DiaryServiceTest {
         DiarySaveRequest request = DiarySaveRequest.builder()
                 .title("test")
                 .content("test")
+                .visibility(String.valueOf(Visibility.PUBLIC))
                 .build();
 
         diaryService.saveDiary(member.getId(), request);
@@ -50,6 +52,7 @@ class DiaryServiceTest {
         List<Diary> diaryList = diaryJpaRepository.findAll();
         assertThat(diaryList.get(0).getTitle()).isEqualTo("test");
         assertThat(diaryList.get(0).getContent()).isEqualTo("test");
+        assertThat(diaryList.get(0).getVisibility()).isEqualTo(Visibility.PUBLIC);
         assertThat(diaryList.get(0).getMember().getId()).isEqualTo(member.getId());
     }
 
@@ -62,6 +65,7 @@ class DiaryServiceTest {
         DiarySaveRequest request = DiarySaveRequest.builder()
                 .title("test")
                 .content("test")
+                .visibility(String.valueOf(Visibility.PUBLIC))
                 .build();
 
         diaryService.saveDiary(member.getId(), request);

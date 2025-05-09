@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zeorck.diary.domain.diary.domain.Diary;
 import org.zeorck.diary.domain.diary.domain.DiaryRepository;
+import org.zeorck.diary.domain.diary.domain.Visibility;
 import org.zeorck.diary.domain.diary.dto.request.DiarySaveRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryUpdateRequest;
 import org.zeorck.diary.domain.diary.dto.response.DiarySaveResponse;
@@ -28,6 +29,7 @@ public class DiaryService {
                 .member(member)
                 .title(diarySaveRequest.title())
                 .content(diarySaveRequest.content())
+                .visibility(Visibility.valueOf(diarySaveRequest.visibility()))
                 .build();
         diaryRepository.save(diary);
 

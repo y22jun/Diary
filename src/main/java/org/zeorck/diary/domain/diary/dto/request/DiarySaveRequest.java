@@ -10,7 +10,10 @@ public record DiarySaveRequest(
         String title,
 
         @NotNull(message = "내용을 입력해 주세요.")
-        String content
+        String content,
+
+        @NotNull(message = "공개 / 비공개 여부를 선택해 주세요.")
+        String visibility
 
 ) {
 }

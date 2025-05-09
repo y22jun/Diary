@@ -27,11 +27,16 @@ public class Diary extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Visibility visibility;
+
     @Builder
-    private Diary(Member member, String title, String content) {
+    private Diary(Member member, String title, String content, Visibility visibility) {
         this.member = member;
         this.title = title;
         this.content = content;
+        this.visibility = visibility;
     }
 
     public void diaryUpdate(String title, String content) {
