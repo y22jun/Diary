@@ -82,6 +82,26 @@ class DiaryServiceTest {
         assertThat(updatedDiary.getContent()).isEqualTo("test");
     }
 
+    @DisplayName("특정 일기를 삭제한다.")
+    @Test
+    void deleteDiary() {
+        Member member = getNewMember();
+        memberJpaRepository.save(member);
+
+        DiarySaveRequest request = DiarySaveRequest.builder()
+                .title("test")
+                .content("test")
+                .visibility(String.valueOf(Visibility.PUBLIC))
+                .build();
+
+        diaryService.saveDiary(member.getId(), request);
+        Diary savedDiary = diaryJpaRepository.findAll().get(0);
+
+        diaryService.deleteDiary(member.getId(), savedDiary.getId());
+
+        assertThat(diaryJpaRepository.findById(savedDiary.getId())).isEmpty();
+    }
+
     Member getNewMember() {
         return Member.builder()
                 .email("test@naver.com")

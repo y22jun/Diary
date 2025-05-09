@@ -38,4 +38,13 @@ public class DiaryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{diaryId}")
+    public ResponseEntity<Void> deleteDiary(
+            @MemberId Long memberId,
+            @PathVariable Long diaryId
+    ) {
+        diaryService.deleteDiary(memberId, diaryId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

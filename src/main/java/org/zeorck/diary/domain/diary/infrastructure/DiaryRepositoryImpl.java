@@ -23,4 +23,9 @@ public class DiaryRepositoryImpl implements DiaryRepository {
                 .orElseThrow(DiaryNotFoundException::new);
     }
 
+    @Override
+    public void delete(Diary diary) {
+        diaryJpaRepository.delete(diary);
+    }
+
 }

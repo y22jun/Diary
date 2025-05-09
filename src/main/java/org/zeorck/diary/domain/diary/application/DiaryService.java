@@ -40,7 +40,7 @@ public class DiaryService {
 
     @Transactional
     public DiaryUpdateResponse updateDiary(Long memberId, Long diaryId, DiaryUpdateRequest diaryUpdateRequest) {
-        Diary diary = diaryRepository.findByDiaryId(diaryId);
+        Diary diary = getDiaryId(diaryId);
 
         Long diaryMemberId = diary.getMember().getId();
         validateForbidden(memberId, diaryMemberId);
@@ -50,6 +50,20 @@ public class DiaryService {
         return DiaryUpdateResponse.builder()
                 .diaryId(diaryId)
                 .build();
+    }
+
+    @Transactional
+    public void deleteDiary(Long memberId, Long diaryId) {
+        Diary diary = getDiaryId(diaryId);
+
+        Long diaryMemberId = diary.getMember().getId();
+        validateForbidden(memberId, diaryMemberId);
+
+        diaryRepository.delete(diary);
+    }
+
+    private Diary getDiaryId(Long diaryId) {
+        return diaryRepository.findByDiaryId(diaryId);
     }
 
     private void validateForbidden(Long memberId, Long diaryMemberId) {
