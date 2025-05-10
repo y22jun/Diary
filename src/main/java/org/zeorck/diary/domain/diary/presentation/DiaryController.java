@@ -2,6 +2,8 @@ package org.zeorck.diary.domain.diary.presentation;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import org.zeorck.diary.domain.diary.dto.response.DiaryInfoResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiarySaveResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiaryUpdateResponse;
 import org.zeorck.diary.global.annotation.MemberId;
+import org.zeorck.diary.global.response.PageableResponse;
 
 @RequiredArgsConstructor
 @RequestMapping("/diarys")
@@ -54,6 +57,17 @@ public class DiaryController {
     ) {
         diaryService.getDiaryInfo(diaryId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<PageableResponse<DiaryInfoResponse>> getAllMyDiaries(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @MemberId Long memberId
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        PageableResponse<DiaryInfoResponse> response = diaryService.getAllMyDiaries(memberId, pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

@@ -1,6 +1,9 @@
 package org.zeorck.diary.domain.diary.application;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zeorck.diary.domain.diary.domain.Diary;
@@ -14,6 +17,9 @@ import org.zeorck.diary.domain.diary.dto.response.DiaryUpdateResponse;
 import org.zeorck.diary.domain.diary.presentation.exception.DiaryNotForbiddenException;
 import org.zeorck.diary.domain.member.domain.Member;
 import org.zeorck.diary.domain.member.domain.MemberRepository;
+import org.zeorck.diary.global.response.PageableResponse;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -74,6 +80,23 @@ public class DiaryService {
                 .content(diary.getContent())
                 .createdAt(diary.getCreatedAt())
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public PageableResponse<DiaryInfoResponse> getAllMyDiaries(Long memberId, Pageable pageable) {
+        Page<Diary> diaries = diaryRepository.findByMemberId(memberId, pageable);
+
+        List<DiaryInfoResponse> diaryInfoResponses = diaries.stream()
+                .map(diary -> DiaryInfoResponse.builder()
+                        .diaryId(diary.getId())
+                        .memberId(diary.getMember().getId())
+                        .title(diary.getTitle())
+                        .content(diary.getContent())
+                        .createdAt(diary.getCreatedAt())
+                        .build())
+                .toList();
+
+        return PageableResponse.of(pageable, diaryInfoResponses);
     }
 
     private Diary getDiaryId(Long diaryId) {
