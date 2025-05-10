@@ -8,6 +8,7 @@ import org.zeorck.diary.domain.diary.domain.DiaryRepository;
 import org.zeorck.diary.domain.diary.domain.Visibility;
 import org.zeorck.diary.domain.diary.dto.request.DiarySaveRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryUpdateRequest;
+import org.zeorck.diary.domain.diary.dto.response.DiaryInfoResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiarySaveResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiaryUpdateResponse;
 import org.zeorck.diary.domain.diary.presentation.exception.DiaryNotForbiddenException;
@@ -60,6 +61,19 @@ public class DiaryService {
         validateForbidden(memberId, diaryMemberId);
 
         diaryRepository.delete(diary);
+    }
+
+    @Transactional(readOnly = true)
+    public DiaryInfoResponse getDiaryInfo(Long diaryId) {
+        Diary diary = getDiaryId(diaryId);
+
+        return DiaryInfoResponse.builder()
+                .diaryId(diary.getId())
+                .memberId(diary.getMember().getId())
+                .title(diary.getTitle())
+                .content(diary.getContent())
+                .createdAt(diary.getCreatedAt())
+                .build();
     }
 
     private Diary getDiaryId(Long diaryId) {

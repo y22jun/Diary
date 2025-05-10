@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.zeorck.diary.domain.diary.application.DiaryService;
 import org.zeorck.diary.domain.diary.dto.request.DiarySaveRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryUpdateRequest;
+import org.zeorck.diary.domain.diary.dto.response.DiaryInfoResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiarySaveResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiaryUpdateResponse;
 import org.zeorck.diary.global.annotation.MemberId;
@@ -45,6 +46,14 @@ public class DiaryController {
     ) {
         diaryService.deleteDiary(memberId, diaryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{diaryId}")
+    public ResponseEntity<DiaryInfoResponse> getDiaryInfo(
+            @PathVariable Long diaryId
+    ) {
+        diaryService.getDiaryInfo(diaryId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
