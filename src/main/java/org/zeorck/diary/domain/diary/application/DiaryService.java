@@ -17,6 +17,7 @@ import org.zeorck.diary.domain.diary.dto.response.DiarySaveResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiaryUpdateResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiaryVisibilityUpdateResponse;
 import org.zeorck.diary.domain.diary.presentation.exception.DiaryNotForbiddenException;
+import org.zeorck.diary.domain.diary.presentation.exception.DiaryNotPublic;
 import org.zeorck.diary.domain.member.domain.Member;
 import org.zeorck.diary.domain.member.domain.MemberRepository;
 import org.zeorck.diary.global.response.PageableResponse;
@@ -90,6 +91,10 @@ public class DiaryService {
     @Transactional(readOnly = true)
     public DiaryInfoResponse getDiaryInfo(Long diaryId) {
         Diary diary = getDiaryId(diaryId);
+
+        if (diary.getVisibility() != Visibility.PUBLIC) {
+            throw new DiaryNotPublic();
+        }
 
         return DiaryInfoResponse.builder()
                 .diaryId(diary.getId())
