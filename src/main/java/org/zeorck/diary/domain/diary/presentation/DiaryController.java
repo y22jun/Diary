@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import org.zeorck.diary.domain.diary.application.DiaryService;
 import org.zeorck.diary.domain.diary.dto.request.DiarySaveRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryUpdateRequest;
+import org.zeorck.diary.domain.diary.dto.request.DiaryVisibilityUpdateRequest;
 import org.zeorck.diary.domain.diary.dto.response.DiaryInfoResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiarySaveResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiaryUpdateResponse;
+import org.zeorck.diary.domain.diary.dto.response.DiaryVisibilityUpdateResponse;
 import org.zeorck.diary.global.annotation.MemberId;
 import org.zeorck.diary.global.response.PageableResponse;
 
@@ -39,6 +41,16 @@ public class DiaryController {
         @Valid @RequestBody DiaryUpdateRequest diaryUpdateRequest
     ) {
         DiaryUpdateResponse response = diaryService.updateDiary(memberId, diaryId, diaryUpdateRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{diaryId}")
+    public ResponseEntity<DiaryVisibilityUpdateResponse> updateVisibilityDiary(
+            @MemberId Long memberId,
+            @PathVariable Long diaryId,
+            @RequestBody DiaryVisibilityUpdateRequest diaryVisibilityUpdateRequest
+    ) {
+        DiaryVisibilityUpdateResponse response = diaryService.updateDiaryVisibility(memberId, diaryId, diaryVisibilityUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

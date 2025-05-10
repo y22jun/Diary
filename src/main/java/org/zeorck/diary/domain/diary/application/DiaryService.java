@@ -11,9 +11,11 @@ import org.zeorck.diary.domain.diary.domain.DiaryRepository;
 import org.zeorck.diary.domain.diary.domain.Visibility;
 import org.zeorck.diary.domain.diary.dto.request.DiarySaveRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryUpdateRequest;
+import org.zeorck.diary.domain.diary.dto.request.DiaryVisibilityUpdateRequest;
 import org.zeorck.diary.domain.diary.dto.response.DiaryInfoResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiarySaveResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiaryUpdateResponse;
+import org.zeorck.diary.domain.diary.dto.response.DiaryVisibilityUpdateResponse;
 import org.zeorck.diary.domain.diary.presentation.exception.DiaryNotForbiddenException;
 import org.zeorck.diary.domain.member.domain.Member;
 import org.zeorck.diary.domain.member.domain.MemberRepository;
@@ -55,6 +57,22 @@ public class DiaryService {
         diary.diaryUpdate(diaryUpdateRequest.title(), diaryUpdateRequest.content());
 
         return DiaryUpdateResponse.builder()
+                .diaryId(diaryId)
+                .build();
+    }
+
+    @Transactional
+    public DiaryVisibilityUpdateResponse updateDiaryVisibility(Long memberId, Long diaryId, DiaryVisibilityUpdateRequest diaryVisibilityUpdateRequest) {
+        Diary diary = getDiaryId(diaryId);
+
+        Long diaryMemberId = diary.getMember().getId();
+        validateForbidden(memberId, diaryMemberId);
+
+        diary.diaryVisibilityUpdate(
+                Visibility.valueOf(diaryVisibilityUpdateRequest.visibility())
+        );
+
+        return DiaryVisibilityUpdateResponse.builder()
                 .diaryId(diaryId)
                 .build();
     }

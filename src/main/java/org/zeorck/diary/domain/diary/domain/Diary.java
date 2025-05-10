@@ -44,4 +44,8 @@ public class Diary extends BaseTimeEntity {
         this.content = content;
     }
 
+    public void diaryVisibilityUpdate(Visibility visibility) {
+        this.visibility = visibility;
+    }
+
 }

@@ -11,6 +11,7 @@ import org.zeorck.diary.domain.diary.domain.Diary;
 import org.zeorck.diary.domain.diary.domain.Visibility;
 import org.zeorck.diary.domain.diary.dto.request.DiarySaveRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryUpdateRequest;
+import org.zeorck.diary.domain.diary.dto.request.DiaryVisibilityUpdateRequest;
 import org.zeorck.diary.domain.diary.dto.response.DiaryInfoResponse;
 import org.zeorck.diary.domain.diary.infrastructure.DiaryJpaRepository;
 import org.zeorck.diary.domain.member.domain.Member;
@@ -84,6 +85,30 @@ class DiaryServiceTest {
         Diary updatedDiary = diaryJpaRepository.findById(savedDiary.getId()).orElseThrow();
         assertThat(updatedDiary.getTitle()).isEqualTo("test");
         assertThat(updatedDiary.getContent()).isEqualTo("test");
+    }
+
+    @DisplayName("특정 일기를 수정한다.")
+    @Test
+    void updateVisibilityDiary() {
+        Member member = getNewMember();
+        memberJpaRepository.save(member);
+
+        DiarySaveRequest request = DiarySaveRequest.builder()
+                .title("test")
+                .content("test")
+                .visibility(String.valueOf(Visibility.PUBLIC))
+                .build();
+
+        diaryService.saveDiary(member.getId(), request);
+        Diary savedDiary = diaryJpaRepository.findAll().get(0);
+
+        DiaryVisibilityUpdateRequest diaryVisibilityUpdateRequest = DiaryVisibilityUpdateRequest.builder()
+                .visibility(String.valueOf(Visibility.PRIVATE))
+                .build();
+        diaryService.updateDiaryVisibility(member.getId(), savedDiary.getId(), diaryVisibilityUpdateRequest);
+
+        Diary updatedDiary = diaryJpaRepository.findById(savedDiary.getId()).orElseThrow();
+        assertThat(updatedDiary.getVisibility()).isEqualTo(Visibility.PRIVATE);
     }
 
     @DisplayName("특정 일기를 삭제한다.")
