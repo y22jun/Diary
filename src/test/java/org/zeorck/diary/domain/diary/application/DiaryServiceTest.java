@@ -87,7 +87,7 @@ class DiaryServiceTest {
         assertThat(updatedDiary.getContent()).isEqualTo("test");
     }
 
-    @DisplayName("특정 일기를 수정한다.")
+    @DisplayName("공개 / 비공개 전환한다.")
     @Test
     void updateVisibilityDiary() {
         Member member = getNewMember();
@@ -171,6 +171,30 @@ class DiaryServiceTest {
         Pageable pageable = PageRequest.of(0, 5);
 
         PageableResponse<DiaryInfoResponse> response = diaryService.getAllMyDiaries(member.getId(), pageable);
+
+        assertThat(response.content()).hasSize(5);
+        assertThat(response.content().get(0).title()).isEqualTo("title 1");
+        assertThat(response.content().get(4).title()).isEqualTo("title 5");
+    }
+
+    @DisplayName("공개된 모든 일기를 페이징하여 조회한다.")
+    @Test
+    void getAllPublicDiaries() {
+        Member member = getNewMember();
+        memberJpaRepository.save(member);
+
+        for (int i = 1; i <= 10; i++) {
+            DiarySaveRequest request = DiarySaveRequest.builder()
+                    .title("title " + i)
+                    .content("content " + i)
+                    .visibility(String.valueOf(Visibility.PUBLIC))
+                    .build();
+            diaryService.saveDiary(member.getId(), request);
+        }
+
+        Pageable pageable = PageRequest.of(0, 5);
+
+        PageableResponse<DiaryInfoResponse> response = diaryService.getAllPublicDiaries(pageable);
 
         assertThat(response.content()).hasSize(5);
         assertThat(response.content().get(0).title()).isEqualTo("title 1");

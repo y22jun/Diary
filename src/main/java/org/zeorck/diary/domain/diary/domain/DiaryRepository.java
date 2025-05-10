@@ -12,4 +12,6 @@ public interface DiaryRepository {
     void delete(Diary diary);
 
     Page<Diary> findByMemberId(Long memberId, Pageable pageable);
+
+    Page<Diary> findByVisibility(Visibility visibility, Pageable pageable);
 }

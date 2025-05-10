@@ -117,6 +117,23 @@ public class DiaryService {
         return PageableResponse.of(pageable, diaryInfoResponses);
     }
 
+    @Transactional(readOnly = true)
+    public PageableResponse<DiaryInfoResponse> getAllPublicDiaries(Pageable pageable) {
+        Page<Diary> diaries = diaryRepository.findByVisibility(Visibility.PUBLIC, pageable);
+
+        List<DiaryInfoResponse> diaryInfoResponses = diaries.stream()
+                .map(diary -> DiaryInfoResponse.builder()
+                        .diaryId(diary.getId())
+                        .memberId(diary.getMember().getId())
+                        .title(diary.getTitle())
+                        .content(diary.getContent())
+                        .createdAt(diary.getCreatedAt())
+                        .build())
+                .toList();
+
+        return PageableResponse.of(pageable, diaryInfoResponses);
+    }
+
     private Diary getDiaryId(Long diaryId) {
         return diaryRepository.findByDiaryId(diaryId);
     }
