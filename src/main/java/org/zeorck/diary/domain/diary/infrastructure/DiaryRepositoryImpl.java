@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 import org.zeorck.diary.domain.diary.domain.Diary;
 import org.zeorck.diary.domain.diary.domain.DiaryRepository;
 import org.zeorck.diary.domain.diary.domain.Visibility;
+import org.zeorck.diary.domain.diary.dto.response.DiaryInfoResponse;
 import org.zeorck.diary.domain.diary.presentation.exception.DiaryNotFoundException;
+import org.zeorck.diary.global.response.PageableResponse;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class DiaryRepositoryImpl implements DiaryRepository {
 
     private final DiaryJpaRepository diaryJpaRepository;
+    private final DiaryQueryDslRepository diaryQueryDslRepository;
 
     @Override
     public void save(Diary diary) {
@@ -41,6 +44,11 @@ public class DiaryRepositoryImpl implements DiaryRepository {
     @Override
     public Page<Diary> findByVisibility(Visibility visibility, Pageable pageable) {
         return diaryJpaRepository.findByVisibility(visibility, pageable);
+    }
+
+    @Override
+    public PageableResponse<DiaryInfoResponse> findAllByTitleOrContentContaining(String keyword, Pageable pageable) {
+        return diaryQueryDslRepository.findAllByTitleOrContentContaining(keyword, pageable);
     }
 
 }

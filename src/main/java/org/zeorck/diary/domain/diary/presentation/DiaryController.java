@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zeorck.diary.domain.diary.application.DiaryService;
+import org.zeorck.diary.domain.diary.domain.Diary;
 import org.zeorck.diary.domain.diary.dto.request.DiarySaveRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryUpdateRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryVisibilityUpdateRequest;
@@ -17,6 +18,8 @@ import org.zeorck.diary.domain.diary.dto.response.DiaryUpdateResponse;
 import org.zeorck.diary.domain.diary.dto.response.DiaryVisibilityUpdateResponse;
 import org.zeorck.diary.global.annotation.MemberId;
 import org.zeorck.diary.global.response.PageableResponse;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/diarys")
@@ -67,8 +70,8 @@ public class DiaryController {
     public ResponseEntity<DiaryInfoResponse> getDiaryInfo(
             @PathVariable Long diaryId
     ) {
-        diaryService.getDiaryInfo(diaryId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        DiaryInfoResponse response = diaryService.getDiaryInfo(diaryId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/me")
@@ -90,6 +93,14 @@ public class DiaryController {
         Pageable pageable = PageRequest.of(page, size);
         PageableResponse<DiaryInfoResponse> response = diaryService.getAllPublicDiaries(pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public PageableResponse<DiaryInfoResponse> searchDiaries(
+            @RequestParam String keyword,
+            Pageable pageable
+    ) {
+        return diaryService.searchDiaries(keyword, pageable);
     }
 
 }

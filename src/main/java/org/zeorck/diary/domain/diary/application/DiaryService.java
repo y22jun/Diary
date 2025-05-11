@@ -138,6 +138,10 @@ public class DiaryService {
         return PageableResponse.of(pageable, diaryInfoResponses);
     }
 
+    public PageableResponse<DiaryInfoResponse> searchDiaries(String keyword, Pageable pageable) {
+        return diaryRepository.findAllByTitleOrContentContaining(keyword, pageable);
+    }
+
     private Diary getDiaryId(Long diaryId) {
         return diaryRepository.findByDiaryId(diaryId);
     }
