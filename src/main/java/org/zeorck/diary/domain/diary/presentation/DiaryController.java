@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zeorck.diary.domain.diary.application.DiaryService;
-import org.zeorck.diary.domain.diary.domain.Diary;
 import org.zeorck.diary.domain.diary.dto.request.DiarySaveRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryUpdateRequest;
 import org.zeorck.diary.domain.diary.dto.request.DiaryVisibilityUpdateRequest;
