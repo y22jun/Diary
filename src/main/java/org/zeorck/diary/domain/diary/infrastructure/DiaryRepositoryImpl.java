@@ -11,7 +11,6 @@ import org.zeorck.diary.domain.diary.dto.response.DiaryInfoResponse;
 import org.zeorck.diary.domain.diary.presentation.exception.DiaryNotFoundException;
 import org.zeorck.diary.global.response.PageableResponse;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
